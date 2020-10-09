@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-@Service("email")
-public class EmailService implements NotificationService {
+@Service("sms")
+public class SmsService implements NotificationService {
 
-    private static final Logger log = LoggerFactory.getLogger(EmailService.class);
-    public static final String EMAIL = "email";
+    private static final Logger log = LoggerFactory.getLogger(SmsService.class);
+    public static final String SMS = "sms";
 
     @Override
     public void sendMessage(String source, String destination, String subject, String message) {
@@ -18,6 +18,6 @@ public class EmailService implements NotificationService {
 
     @Override
     public String getName() {
-        return EMAIL;
+        return SMS;
     }
 }
