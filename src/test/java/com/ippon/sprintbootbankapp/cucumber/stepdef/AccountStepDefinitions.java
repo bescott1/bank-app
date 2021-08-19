@@ -62,7 +62,7 @@ public class AccountStepDefinitions {
     @Then("the account has {double} balance")
     public void theAccountHasBalance(double balance) throws Exception {
         mockMvc
-                .perform(get("/api/account/" + currentAccount.getLastName()))
+                .perform(get("/api/account/1"))
                 .andExpect(status().isOk())
             .andExpect(jsonPath("$.balance").value(balance));
 

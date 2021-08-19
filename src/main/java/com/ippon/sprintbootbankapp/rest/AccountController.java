@@ -29,9 +29,9 @@ public class AccountController {
         return accountService.getAllAccounts();
     }
 
-    @GetMapping("/account/{lastName}")
-    public AccountDTO account(@PathVariable(name = "lastName") String lastName) {
-        return accountService.getAccount(lastName);
+    @GetMapping("/account/{id}")
+    public AccountDTO account(@PathVariable(name = "id") Integer id) {
+        return accountService.getAccount(id);
     }
 
 }

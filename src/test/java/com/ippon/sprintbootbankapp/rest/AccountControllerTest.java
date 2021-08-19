@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ippon.sprintbootbankapp.rest.errors.RestErrorHandler;
 import com.ippon.sprintbootbankapp.service.AccountService;
 import com.ippon.sprintbootbankapp.service.dto.AccountDTO;
-import com.ippon.sprintbootbankapp.service.exception.AccountLastNameExistsException;
 import com.ippon.sprintbootbankapp.service.exception.AccountNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,13 +51,13 @@ class AccountControllerTest {
 
     @Test
     public void testAccountRetrieval_AccountExists() throws Exception {
-        given(accountService.getAccount("Scott"))
+        given(accountService.getAccount(1))
                 .willReturn(new AccountDTO()
                         .lastName("Scott")
                         .firstName("Ben"));
 
         mockMvc
-                .perform(get("/api/account/Scott"))
+                .perform(get("/api/account/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("Ben"))
                 .andExpect(jsonPath("$.lastName").value("Scott"));
@@ -66,11 +65,11 @@ class AccountControllerTest {
 
     @Test
     public void testAccountRetrieval_AccountDoesNotExist() throws Exception {
-        given(accountService.getAccount("Scott"))
+        given(accountService.getAccount(95))
                 .willThrow(new AccountNotFoundException());
 
         String errorMessage = mockMvc
-                .perform(get("/api/account/Scott"))
+                .perform(get("/api/account/95"))
                 .andExpect(status().isNotFound())
                 .andReturn()
                 .getResponse()
@@ -147,22 +146,6 @@ class AccountControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newAccount)))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void testCreateAccount_lastNameExists_throwsException() throws Exception {
-        AccountDTO newAccount = new AccountDTO()
-                .firstName("Ben")
-                .lastName("Scott");
-
-        given(accountService.createAccount(newAccount))
-                .willThrow(new AccountLastNameExistsException());
-
-        mockMvc
-                .perform(post("/api/account/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newAccount)))
-                .andExpect(status().isConflict());
     }
 
 }

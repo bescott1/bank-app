@@ -48,11 +48,11 @@ public class AccountServiceTest {
 
         Account account = new Account(accountDto.getFirstName(), accountDto.getLastName());
 
-        given(accountRepository.findByLastName(account.getLastName()))
+        given(accountRepository.findById(1))
                 .willReturn(Optional.of(account));
 
         //act
-        AccountDTO accountResult = subject.getAccount(account.getLastName());
+        AccountDTO accountResult = subject.getAccount(1);
 
         //assert
         assertThat(accountResult.getFirstName(), is("Ben"));

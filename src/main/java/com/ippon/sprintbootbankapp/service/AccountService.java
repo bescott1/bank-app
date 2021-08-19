@@ -3,7 +3,6 @@ package com.ippon.sprintbootbankapp.service;
 import com.ippon.sprintbootbankapp.domain.Account;
 import com.ippon.sprintbootbankapp.repository.AccountRepository;
 import com.ippon.sprintbootbankapp.service.dto.AccountDTO;
-import com.ippon.sprintbootbankapp.service.exception.AccountLastNameExistsException;
 import com.ippon.sprintbootbankapp.service.exception.AccountNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,6 @@ public class AccountService {
     }
 
     public AccountDTO createAccount(AccountDTO newAccount) {
-        validateLastNameUnique(newAccount.getLastName());
         Account account = new Account(newAccount.getFirstName(), newAccount.getLastName());
         account.setNotificationPreference(notificationFactory
                 .getDefaultNotification()
@@ -41,9 +39,9 @@ public class AccountService {
         return mapAccountToDTO(save);
     }
 
-    public AccountDTO getAccount(String lastName) {
+    public AccountDTO getAccount(Integer id) {
         Account account = accountRepository
-                .findByLastName(lastName)
+                .findById(id)
                 .orElseThrow(AccountNotFoundException::new);
 
         return mapAccountToDTO(account);
@@ -53,12 +51,6 @@ public class AccountService {
         return accountRepository.findAll().stream()
                 .map(this::mapAccountToDTO)
                 .collect(Collectors.toList());
-    }
-
-    private void validateLastNameUnique(String lastName) {
-        accountRepository
-                .findByLastName(lastName)
-                .ifPresent(t -> {throw new AccountLastNameExistsException();});
     }
 
     private AccountDTO mapAccountToDTO(Account account) {

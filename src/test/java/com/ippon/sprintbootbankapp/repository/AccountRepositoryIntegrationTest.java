@@ -27,16 +27,6 @@ public class AccountRepositoryIntegrationTest {
     }
 
     @Test
-    public void shouldSaveAndFetchAccountByLastName() {
-        Account account = new Account("First", "Last");
-        subject.save(account);
-
-        Optional<Account> result = subject.findByLastName("Last");
-
-        assertThat(result, is(Optional.of(account)));
-    }
-
-    @Test
     public void shouldSaveAndFetchAccountById() {
         Account account = new Account("First", "Last");
         Account save = subject.save(account);
@@ -48,24 +38,9 @@ public class AccountRepositoryIntegrationTest {
 
     @Test
     @Sql(scripts = "classpath:sql/account_insert.sql")
-    public void fetchesByLastname() {
-
-        Account result = subject
-                .findByLastName("Scott")
-                .orElseThrow(AccountNotFoundException::new);
-
-        assertThat(result.getId(), is(-10));
-        assertThat(result.getBalance(), is(BigDecimal.valueOf(145.32)));
-        assertThat(result.getFirstName(), is("Ben"));
-        assertThat(result.getLastName(), is("Scott"));
-        assertThat(result.getNotificationPreference(), is("email"));
-    }
-
-    @Test
-    @Sql(scripts = "classpath:sql/account_insert.sql")
     public void fetchesAll() {
         List<Account> allAccounts = subject.findAll();
-        assertThat(allAccounts.size(), is(6));
+        assertThat(allAccounts.size(), is(7));
     }
 
 }

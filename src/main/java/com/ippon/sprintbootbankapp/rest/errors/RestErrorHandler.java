@@ -1,6 +1,5 @@
 package com.ippon.sprintbootbankapp.rest.errors;
 
-import com.ippon.sprintbootbankapp.service.exception.AccountLastNameExistsException;
 import com.ippon.sprintbootbankapp.service.exception.AccountNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,9 +20,4 @@ public class RestErrorHandler {
 
     }
 
-    @ExceptionHandler(AccountLastNameExistsException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Last name already exists")
-    public void handleLastNameAlreadyExists() {
-
-    }
 }
