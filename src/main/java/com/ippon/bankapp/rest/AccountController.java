@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -24,6 +25,11 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     public AccountDTO createAccount(@Valid @RequestBody AccountDTO newAccount) {
         return accountService.createAccount(newAccount);
+    }
+
+    @GetMapping("/accounts")
+    public List<AccountDTO> allAccounts() {
+        return accountService.getAllAccounts();
     }
 
     @GetMapping("/account/{lastName}")

@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
@@ -59,4 +60,12 @@ public class AccountRepositoryIntegrationTest {
         assertThat(result.getLastName(), is("Scott"));
         assertThat(result.getNotificationPreference(), is("email"));
     }
+
+    @Test
+    @Sql(scripts = "classpath:sql/account_insert.sql")
+    public void fetchesAll() {
+        List<Account> allAccounts = subject.findAll();
+        assertThat(allAccounts.size(), is(6));
+    }
+
 }

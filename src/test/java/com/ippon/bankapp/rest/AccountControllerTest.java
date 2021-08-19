@@ -1,6 +1,7 @@
 package com.ippon.bankapp.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ippon.bankapp.domain.Account;
 import com.ippon.bankapp.domain.Deposit;
 import com.ippon.bankapp.domain.Transfer;
 import com.ippon.bankapp.domain.Withdrawal;
@@ -20,6 +21,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -80,6 +83,26 @@ class AccountControllerTest {
                 .getErrorMessage();
 
         assertThat(errorMessage, is("Account not found"));
+    }
+
+    @Test
+    public void testAllAccountsRetrieval() throws Exception {
+        AccountDTO firstAccountDTO = new AccountDTO()
+                .firstName("Ben")
+                .lastName("Scott");
+
+        AccountDTO secondAccountDTO = new AccountDTO()
+                .firstName("Mike")
+                .lastName("Mitchell");
+
+        given(accountService.getAllAccounts())
+                .willReturn(new ArrayList<>(Arrays.asList(firstAccountDTO, secondAccountDTO)));
+
+        mockMvc
+                .perform(get("/api/accounts"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].lastName").value("Scott"))
+                .andExpect(jsonPath("$[1].lastName").value("Mitchell"));
     }
 
     @Test

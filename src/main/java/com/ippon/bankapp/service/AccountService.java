@@ -10,6 +10,9 @@ import com.ippon.bankapp.service.exception.AccountLastNameExistsException;
 import com.ippon.bankapp.service.exception.AccountNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AccountService {
 
@@ -47,6 +50,12 @@ public class AccountService {
                 .orElseThrow(AccountNotFoundException::new);
 
         return mapAccountToDTO(account);
+    }
+
+    public List<AccountDTO> getAllAccounts() {
+        return accountRepository.findAll().stream()
+                .map(this::mapAccountToDTO)
+                .collect(Collectors.toList());
     }
 
     public AccountDTO depositIntoAccount(String lastName, Deposit deposit) {
