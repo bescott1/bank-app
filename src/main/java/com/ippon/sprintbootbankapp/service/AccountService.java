@@ -1,9 +1,6 @@
 package com.ippon.sprintbootbankapp.service;
 
 import com.ippon.sprintbootbankapp.domain.Account;
-import com.ippon.sprintbootbankapp.domain.Deposit;
-import com.ippon.sprintbootbankapp.domain.Transfer;
-import com.ippon.sprintbootbankapp.domain.Withdrawal;
 import com.ippon.sprintbootbankapp.repository.AccountRepository;
 import com.ippon.sprintbootbankapp.service.dto.AccountDTO;
 import com.ippon.sprintbootbankapp.service.exception.AccountLastNameExistsException;
@@ -56,38 +53,6 @@ public class AccountService {
         return accountRepository.findAll().stream()
                 .map(this::mapAccountToDTO)
                 .collect(Collectors.toList());
-    }
-
-    public AccountDTO depositIntoAccount(String lastName, Deposit deposit) {
-        Account account = accountRepository
-                .findByLastName(lastName)
-                .orElseThrow(AccountNotFoundException::new);
-
-        account.setBalance(account.getBalance().add(deposit.getAmount()));
-
-        Account updatedAccount = accountRepository.save(account);
-        return mapAccountToDTO(updatedAccount);
-    }
-
-    public AccountDTO withdrawFromAccount(String lastName, Withdrawal withdrawal) {
-        Account account = accountRepository
-                .findByLastName(lastName)
-                .orElseThrow(AccountNotFoundException::new);
-
-        account.setBalance(account.getBalance().subtract(withdrawal.getAmount()));
-
-        Account updatedAccount = accountRepository.save(account);
-        return mapAccountToDTO(updatedAccount);
-    }
-
-    public AccountDTO transfer(String lastName, Transfer transfer) {
-        withdrawFromAccount(lastName, new Withdrawal(transfer.getAmount()));
-
-        Account destinationAccount = accountRepository
-                .findById(transfer.getDestinationId())
-                .orElseThrow(AccountNotFoundException::new);
-
-        return depositIntoAccount(destinationAccount.getLastName(), new Deposit(transfer.getAmount()));
     }
 
     private void validateLastNameUnique(String lastName) {
