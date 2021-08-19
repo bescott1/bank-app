@@ -1,9 +1,9 @@
 spring:
   application:
-    name: sprintbootbankapp
+    name: bankapp
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:sprintbootbankapp
+    url: jdbc:h2:mem:bankapp
     username: testuser
     password: password
     platform: POSTGRESQL
