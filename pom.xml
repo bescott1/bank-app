@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ippon</groupId>
-    <artifactId>sprintbootbankapp</artifactId>
+    <artifactId>bankapp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sprintbootbankapp</name>
+    <name>bankapp</name>
 
     <properties>
         <java.version>1.8</java.version>

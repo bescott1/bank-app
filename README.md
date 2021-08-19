@@ -1,22 +1,22 @@
-# springboot-bank-app
+# bank-app
 
 Repository to learn how to do automated testing with Spring Boot.
 
 ## Existing features
 
-* [Create an account](src/main/java/com/ippon/sprintbootbankapp/rest/AccountController.java#L22) 
-* [Get account](src/main/java/com/ippon/sprintbootbankapp/rest/AccountController.java#L32) 
-* [Get all accounts](src/main/java/com/ippon/sprintbootbankapp/rest/AccountController.java#L27)
+* [Create an account](src/main/java/com/ippon/bankapp/rest/AccountController.java#L22) 
+* [Get account](src/main/java/com/ippon/bankapp/rest/AccountController.java#L32) 
+* [Get all accounts](src/main/java/com/ippon/bankapp/rest/AccountController.java#L27)
 
 
 ## Definition of Done:
 
 For each feature implemented there should be unit, integration and acceptance tests. Follow the existing features to see the scope. For example:
 
-* [Unit tests for creating an account](src/test/java/com/ippon/sprintbootbankapp/service/AccountServiceTest.java)
-* [Integration tests for the DB](src/test/java/com/ippon/sprintbootbankapp/repository/AccountRepositoryIntegrationTest.java)
-* [Integration tests for the API layer](src/test/java/com/ippon/sprintbootbankapp/rest/AccountControllerTest.java)
-* [Acceptance test for the create an account feature](src/test/features/Account.feature) with [glue code](src/test/java/com/ippon/sprintbootbankapp/cucumber/stepdef/AccountStepDefinitions.java)
+* [Unit tests for creating an account](src/test/java/com/ippon/bankapp/service/AccountServiceTest.java)
+* [Integration tests for the DB](src/test/java/com/ippon/bankapp/repository/AccountRepositoryIntegrationTest.java)
+* [Integration tests for the API layer](src/test/java/com/ippon/bankapp/rest/AccountControllerTest.java)
+* [Acceptance test for the create an account feature](src/test/features/Account.feature) with [glue code](src/test/java/com/ippon/bankapp/cucumber/stepdef/AccountStepDefinitions.java)
 
 ## Todo features
 
