@@ -59,12 +59,12 @@ public class AccountStepDefinitions {
         assertThat(accountDTO.getNotificationPreference(), is("email"));
     }
 
-    @Then("the account has {double} balance")
-    public void theAccountHasBalance(double balance) throws Exception {
+    @Then("the {string} {string} account with id {int} has {double} balance")
+    public void theAccountHasBalance(String firstName, String lastName, int id, double balance) throws Exception {
         mockMvc
-                .perform(get("/api/account/1"))
+                .perform(get("/api/account/" + id))
                 .andExpect(status().isOk())
-            .andExpect(jsonPath("$.balance").value(balance));
+                .andExpect(jsonPath("$.balance").value(balance));
 
     }
 
