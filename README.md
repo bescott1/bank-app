@@ -5,7 +5,8 @@ Repository to learn how to do automated testing with Spring Boot.
 ## Existing features
 
 * [Create an account](src/main/java/com/ippon/sprintbootbankapp/rest/AccountController.java#L22) 
-* [Get account](src/main/java/com/ippon/sprintbootbankapp/rest/AccountController.java#L27) 
+* [Get account](src/main/java/com/ippon/sprintbootbankapp/rest/AccountController.java#L32) 
+* [Get all accounts](src/main/java/com/ippon/sprintbootbankapp/rest/AccountController.java#L27)
 
 
 ## Definition of Done:
