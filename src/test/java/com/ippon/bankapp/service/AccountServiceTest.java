@@ -1,6 +1,8 @@
 package com.ippon.bankapp.service;
 
 import com.ippon.bankapp.domain.Account;
+import com.ippon.bankapp.domain.Deposit;
+import com.ippon.bankapp.domain.Withdrawal;
 import com.ippon.bankapp.repository.AccountRepository;
 import com.ippon.bankapp.service.dto.AccountDTO;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -72,6 +75,54 @@ public class AccountServiceTest {
         assertThat(message.getAllValues().get(1), is(accountDto.getLastName()));
         assertThat(message.getAllValues().get(2), is("Account Created"));
         assertThat(message.getAllValues().get(3), is("Welcome aboard!"));
+    }
+
+    @Test
+    public void depositsIntoAccount() {
+        //Given
+        AccountDTO accountDto = new AccountDTO()
+                .firstName("Ben")
+                .lastName("Scott");
+
+        Account account = new Account(accountDto.getFirstName(), accountDto.getLastName());
+        account.setBalance(new BigDecimal("0.33"));
+        Deposit deposit = new Deposit(new BigDecimal("10.66"));
+
+        given(accountRepository.findByLastName(account.getLastName()))
+                .willReturn(Optional.of(account));
+        given(accountRepository.save(any(Account.class))).willReturn(account);
+
+        //act
+        AccountDTO accountResult = subject.depositIntoAccount(account.getLastName(), deposit);
+
+        //assert
+        assertThat(accountResult.getBalance(), is(new BigDecimal("10.99")));
+        assertThat(accountResult.getFirstName(), is("Ben"));
+        assertThat(accountResult.getLastName(), is("Scott"));
+    }
+
+    @Test
+    public void withdrawFromAccount() {
+        //Given
+        AccountDTO accountDto = new AccountDTO()
+                .firstName("Ben")
+                .lastName("Scott");
+
+        Account account = new Account(accountDto.getFirstName(), accountDto.getLastName());
+        account.setBalance(new BigDecimal("10.50"));
+        Withdrawal withdrawal = new Withdrawal(new BigDecimal("0.49"));
+
+        given(accountRepository.findByLastName(account.getLastName()))
+                .willReturn(Optional.of(account));
+        given(accountRepository.save(any(Account.class))).willReturn(account);
+
+        //act
+        AccountDTO accountResult = subject.withdrawFromAccount(account.getLastName(), withdrawal);
+
+        //assert
+        assertThat(accountResult.getBalance(), is(new BigDecimal("10.01")));
+        assertThat(accountResult.getFirstName(), is("Ben"));
+        assertThat(accountResult.getLastName(), is("Scott"));
     }
 
 }

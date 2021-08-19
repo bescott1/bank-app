@@ -1,6 +1,9 @@
 package com.ippon.bankapp.service;
 
 import com.ippon.bankapp.domain.Account;
+import com.ippon.bankapp.domain.Deposit;
+import com.ippon.bankapp.domain.Transfer;
+import com.ippon.bankapp.domain.Withdrawal;
 import com.ippon.bankapp.repository.AccountRepository;
 import com.ippon.bankapp.service.dto.AccountDTO;
 import com.ippon.bankapp.service.exception.AccountLastNameExistsException;
@@ -46,6 +49,38 @@ public class AccountService {
         return mapAccountToDTO(account);
     }
 
+    public AccountDTO depositIntoAccount(String lastName, Deposit deposit) {
+        Account account = accountRepository
+                .findByLastName(lastName)
+                .orElseThrow(AccountNotFoundException::new);
+
+        account.setBalance(account.getBalance().add(deposit.getAmount()));
+
+        Account updatedAccount = accountRepository.save(account);
+        return mapAccountToDTO(updatedAccount);
+    }
+
+    public AccountDTO withdrawFromAccount(String lastName, Withdrawal withdrawal) {
+        Account account = accountRepository
+                .findByLastName(lastName)
+                .orElseThrow(AccountNotFoundException::new);
+
+        account.setBalance(account.getBalance().subtract(withdrawal.getAmount()));
+
+        Account updatedAccount = accountRepository.save(account);
+        return mapAccountToDTO(updatedAccount);
+    }
+
+    public AccountDTO transfer(String lastName, Transfer transfer) {
+        withdrawFromAccount(lastName, new Withdrawal(transfer.getAmount()));
+
+        Account destinationAccount = accountRepository
+                .findById(transfer.getDestinationId())
+                .orElseThrow(AccountNotFoundException::new);
+
+        return depositIntoAccount(destinationAccount.getLastName(), new Deposit(transfer.getAmount()));
+    }
+
     private void validateLastNameUnique(String lastName) {
         accountRepository
                 .findByLastName(lastName)
@@ -59,4 +94,5 @@ public class AccountService {
                 .balance(account.getBalance())
                 .notificationPreference(account.getNotificationPreference());
     }
+
 }
