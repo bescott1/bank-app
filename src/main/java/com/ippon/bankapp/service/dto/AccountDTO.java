@@ -6,6 +6,8 @@ import java.util.Objects;
 
 public class AccountDTO {
 
+    private Integer id;
+
     @NotEmpty
     private String firstName;
 
@@ -16,6 +18,15 @@ public class AccountDTO {
 
     public AccountDTO() {
     }
+
+    public Integer getId() { return id; }
+
+    public AccountDTO id(Integer id) {
+        this.id = id;
+        return this;
+    }
+
+    public void setId(Integer id) { this.id = id; }
 
     public String getFirstName() {
         return firstName;
