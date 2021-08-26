@@ -53,12 +53,14 @@ class AccountControllerTest {
     public void testAccountRetrieval_AccountExists() throws Exception {
         given(accountService.getAccount(1))
                 .willReturn(new AccountDTO()
+                        .id(1)
                         .lastName("Scott")
                         .firstName("Ben"));
 
         mockMvc
                 .perform(get("/api/accounts/1"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("Ben"))
                 .andExpect(jsonPath("$.lastName").value("Scott"));
     }
@@ -81,10 +83,12 @@ class AccountControllerTest {
     @Test
     public void testAllAccountsRetrieval() throws Exception {
         AccountDTO firstAccountDTO = new AccountDTO()
+                .id(1)
                 .firstName("Ben")
                 .lastName("Scott");
 
         AccountDTO secondAccountDTO = new AccountDTO()
+                .id(2)
                 .firstName("Mike")
                 .lastName("Mitchell");
 
@@ -94,18 +98,22 @@ class AccountControllerTest {
         mockMvc
                 .perform(get("/api/accounts"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].lastName").value("Scott"))
+                .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].lastName").value("Mitchell"));
     }
 
     @Test
     public void testCreateAccount_requestValid() throws Exception {
         AccountDTO newAccount = new AccountDTO()
+                .id(1)
                 .firstName("Ben")
                 .lastName("Scott");
 
         given(accountService.createAccount(newAccount))
                 .willReturn(new AccountDTO()
+                        .id(1)
                         .lastName("Scott")
                         .firstName("Ben")
                         .balance(BigDecimal.ZERO));
@@ -115,6 +123,7 @@ class AccountControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(newAccount)))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("Ben"))
                 .andExpect(jsonPath("$.lastName").value("Scott"))
                 .andExpect(jsonPath("$.balance").value(0.0));
