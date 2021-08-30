@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="Developer-Name" id="Developer-Id-2">
+        <insert tableName="account">
+            <column name="id" valueNumeric="1"/>
+            <column name="first_name" value="Ben"/>
+            <column name="last_name" value="Scott"/>
+            <column name="balance" valueNumeric="145.32"/>
+        </insert>
+        <insert tableName="account">
+            <column name="id" valueNumeric="2"/>
+            <column name="first_name" value="Mike"/>
+            <column name="last_name" value="Mitchell"/>
+            <column name="balance" valueNumeric="1234.56"/>
+        </insert>
+        <insert tableName="account">
+            <column name="id" valueNumeric="3"/>
+            <column name="first_name" value="Hayley"/>
+            <column name="last_name" value="Ortega"/>
+            <column name="balance" valueNumeric="1452.32"/>
+        </insert>
+        <insert tableName="account">
+            <column name="id" valueNumeric="4"/>
+            <column name="first_name" value="Jane"/>
+            <column name="last_name" value="Doe"/>
+            <column name="balance" valueNumeric="45.32"/>
+        </insert>
+        <insert tableName="account">
+            <column name="id" valueNumeric="5"/>
+            <column name="first_name" value="Katie"/>
+            <column name="last_name" value="Smith"/>
+            <column name="balance" valueNumeric="5.32"/>
+        </insert>
+        <insert tableName="account">
+            <column name="id" valueNumeric="6"/>
+            <column name="first_name" value="Julie"/>
+            <column name="last_name" value="Bayern"/>
+            <column name="balance" valueNumeric="0.02"/>
+        </insert>
+        <insert tableName="account">
+            <column name="id" valueNumeric="7"/>
+            <column name="first_name" value="Erin"/>
+            <column name="last_name" value="Geoghan"/>
+            <column name="balance" valueNumeric="1405.32"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
