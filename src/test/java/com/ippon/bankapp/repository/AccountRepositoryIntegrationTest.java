@@ -2,7 +2,6 @@ package com.ippon.bankapp.repository;
 
 import com.ippon.bankapp.domain.Account;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;

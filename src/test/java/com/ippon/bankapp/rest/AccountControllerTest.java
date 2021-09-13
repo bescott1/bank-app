@@ -1,6 +1,9 @@
 package com.ippon.bankapp.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ippon.bankapp.domain.Deposit;
+import com.ippon.bankapp.domain.Transfer;
+import com.ippon.bankapp.domain.Withdrawal;
 import com.ippon.bankapp.rest.errors.RestErrorHandler;
 import com.ippon.bankapp.service.AccountService;
 import com.ippon.bankapp.service.dto.AccountDTO;
@@ -21,6 +24,7 @@ import java.util.Arrays;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -152,6 +156,72 @@ class AccountControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newAccount)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testDeposit_requestValid() throws Exception {
+        Deposit deposit = new Deposit(new BigDecimal("12.55"));
+
+        given(accountService.depositIntoAccount(anyInt(), any(Deposit.class)))
+                .willReturn(new AccountDTO()
+                        .id(1)
+                        .lastName("Scott")
+                        .firstName("Ben")
+                        .balance(deposit.getAmount()));
+
+        mockMvc
+                .perform(post("/api/accounts/1/deposit")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(deposit)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.firstName").value("Ben"))
+                .andExpect(jsonPath("$.lastName").value("Scott"))
+                .andExpect(jsonPath("$.balance").value(deposit.getAmount()));
+    }
+
+    @Test
+    public void testWithdraw_requestValid() throws Exception {
+        Withdrawal withdrawal = new Withdrawal(new BigDecimal("9.99"));
+
+        given(accountService.withdrawFromAccount(anyInt(), any(Withdrawal.class)))
+                .willReturn(new AccountDTO()
+                        .id(1)
+                        .lastName("Scott")
+                        .firstName("Ben")
+                        .balance(new BigDecimal("0.01")));
+
+        mockMvc
+                .perform(post("/api/accounts/1/withdraw")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(withdrawal)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.firstName").value("Ben"))
+                .andExpect(jsonPath("$.lastName").value("Scott"))
+                .andExpect(jsonPath("$.balance").value("0.01"));
+    }
+
+    @Test
+    public void testTransfer_requestValid() throws Exception {
+        Transfer withdrawal = new Transfer(new BigDecimal("10.99"), 1);
+
+        given(accountService.transfer(anyInt(), any(Transfer.class)))
+                .willReturn(new AccountDTO()
+                        .id(1)
+                        .lastName("Scott")
+                        .firstName("Ben")
+                        .balance(withdrawal.getAmount()));
+
+        mockMvc
+                .perform(post("/api/accounts/3/transfer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(withdrawal)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.firstName").value("Ben"))
+                .andExpect(jsonPath("$.lastName").value("Scott"))
+                .andExpect(jsonPath("$.balance").value(withdrawal.getAmount()));
     }
 
 }

@@ -6,6 +6,10 @@ import com.ippon.bankapp.rest.AccountController;
 import com.ippon.bankapp.service.dto.AccountDTO;
 import io.cucumber.java.Before;
 import io.cucumber.java.After;
+import com.ippon.bankapp.domain.Deposit;
+import com.ippon.bankapp.domain.Transfer;
+import com.ippon.bankapp.domain.Withdrawal;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +35,6 @@ public class AccountStepDefinitions {
 
     @Autowired
     private AccountRepository accountRepository;
-
-    private AccountDTO currentAccount;
 
     @Before
     public void before() {
@@ -61,20 +63,61 @@ public class AccountStepDefinitions {
                 .getContentAsString();
 
         AccountDTO accountDTO = new ObjectMapper().readValue(results, AccountDTO.class);
-        currentAccount = accountDTO;
 
         assertThat(accountDTO.getFirstName(), is(first));
         assertThat(accountDTO.getLastName(), is(last));
         assertThat(accountDTO.getBalance(), is(BigDecimal.ZERO));
     }
 
-    @Then("the {string} {string} account has {double} balance")
-    public void theAccountHasBalance(String firstName, String lastName, double balance) throws Exception {
+    @And("{string} {string} with id {int} deposits {double} into their account")
+    public void aDepositIsMade(String first, String last, int id, double depositAmount) throws Exception {
+        Deposit deposit = new Deposit(new BigDecimal(depositAmount));
+
         mockMvc
-                .perform(get("/api/accounts/" + currentAccount.getId()))
+                .perform(post("/api/accounts/" + id + "/deposit")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(deposit)))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+    }
+
+    @And("{string} {string} with id {int} withdraws {double} from their account")
+    public void aWithdrawalIsMade(String first, String last, int id, double withdrawalAmount) throws Exception {
+        Withdrawal withdrawal = new Withdrawal(new BigDecimal(withdrawalAmount));
+
+        mockMvc
+                .perform(post("/api/accounts/" + id + "/withdraw")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(withdrawal)))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+    }
+
+    @And("{string} {string} with id {int} transfers {double} into the account of id {int}")
+    public void aTransferIsMade(String first, String last, int id, double transferAmount, int destId) throws Exception {
+        Transfer transfer = new Transfer(new BigDecimal(transferAmount), destId);
+
+        mockMvc
+                .perform(post("/api/accounts/" + id + "/transfer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(transfer)))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+    }
+
+    @Then("the {string} {string} account with id {int} has {double} balance")
+    public void theAccountHasBalance(String firstName, String lastName, int id, double balance) throws Exception {
+        mockMvc
+                .perform(get("/api/accounts/" + id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.balance").value(balance))
-                .andExpect(jsonPath("$.id").value(currentAccount.getId()))
+                .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.firstName").value(firstName))
                 .andExpect(jsonPath("$.lastName").value(lastName));
     }
