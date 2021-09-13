@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet author="Developer-Name" id="Developer-Id-1234">
+    <changeSet author="Mike Mitchel" id="1">
         <createTable tableName="account">
             <column autoIncrement="true" name="id" type="INT"/>
             <column name="first_name" type="VARCHAR(255)"/>

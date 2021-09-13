@@ -40,6 +40,7 @@ public class AccountService {
 
     private AccountDTO mapAccountToDTO(Account account) {
         return new AccountDTO()
+                .id(account.getId())
                 .firstName(account.getFirstName())
                 .lastName(account.getLastName())
                 .balance(account.getBalance());

@@ -107,7 +107,6 @@ class AccountControllerTest {
     @Test
     public void testCreateAccount_requestValid() throws Exception {
         AccountDTO newAccount = new AccountDTO()
-                .id(1)
                 .firstName("Ben")
                 .lastName("Scott");
 

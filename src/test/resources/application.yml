@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: bankapp
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:h2:mem:bankapp;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE
+    name:
+    username:
+    password:
+    hikari:
+      auto-commit: false
+  jackson:
+    serialization:
+      write-durations-as-timestamps: false
+  liquibase:
+    contexts: test
+    change-log: classpath:/liquibase/changelog-master.xml

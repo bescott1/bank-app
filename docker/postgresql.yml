@@ -1,0 +1,9 @@
+version: '2'
+services:
+  bankapp-postgresql:
+    image: postgres:12.1
+    environment:
+      - POSTGRES_USER=bankapp
+      - POSTGRES_PASSWORD=
+    ports:
+      - 5432:5432

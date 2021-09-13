@@ -1,9 +1,11 @@
 package com.ippon.bankapp.cucumber.stepdef;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ippon.bankapp.repository.AccountRepository;
 import com.ippon.bankapp.rest.AccountController;
 import com.ippon.bankapp.service.dto.AccountDTO;
 import io.cucumber.java.Before;
+import io.cucumber.java.After;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class AccountStepDefinitions {
     @Autowired
     private AccountController accountController;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
     private AccountDTO currentAccount;
 
     @Before
@@ -34,6 +39,11 @@ public class AccountStepDefinitions {
         mockMvc = MockMvcBuilders
                 .standaloneSetup(accountController)
                 .build();
+    }
+
+    @After
+    public void tearDown() {
+        accountRepository.deleteAll();
     }
 
     @When("A Person {string} {string} creates an account")
@@ -58,13 +68,14 @@ public class AccountStepDefinitions {
         assertThat(accountDTO.getBalance(), is(BigDecimal.ZERO));
     }
 
-    @Then("the {string} {string} account with id {int} has {double} balance")
-    public void theAccountHasBalance(String firstName, String lastName, int id, double balance) throws Exception {
+    @Then("the {string} {string} account has {double} balance")
+    public void theAccountHasBalance(String firstName, String lastName, double balance) throws Exception {
         mockMvc
-                .perform(get("/api/accounts/" + id))
+                .perform(get("/api/accounts/" + currentAccount.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.balance").value(balance));
-
+                .andExpect(jsonPath("$.balance").value(balance))
+                .andExpect(jsonPath("$.id").value(currentAccount.getId()))
+                .andExpect(jsonPath("$.firstName").value(firstName))
+                .andExpect(jsonPath("$.lastName").value(lastName));
     }
-
 }
