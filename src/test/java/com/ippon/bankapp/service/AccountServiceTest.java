@@ -177,9 +177,9 @@ public class AccountServiceTest {
         AccountDTO accountResult = subject.transfer(2, transferDTO);
 
         //assert
-        assertThat(accountResult.getBalance(), is(new BigDecimal("13.27")));
-        assertThat(accountResult.getFirstName(), is("Ben"));
-        assertThat(accountResult.getLastName(), is("Scott"));
+        assertThat(accountResult.getBalance(), is(new BigDecimal("2.06")));
+        assertThat(accountResult.getFirstName(), is("Mike"));
+        assertThat(accountResult.getLastName(), is("Mitchell"));
     }
 
 }

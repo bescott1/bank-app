@@ -62,11 +62,11 @@ public class AccountService {
     }
 
     public AccountDTO transfer(Integer id, TransferDTO transferDTO) {
-        WithdrawalDTO withdrawalDTO = new WithdrawalDTO(transferDTO.getAmount());
-        withdrawFromAccount(id, withdrawalDTO);
-
         DepositDTO depositDTO = new DepositDTO(transferDTO.getAmount());
-        return depositIntoAccount(transferDTO.getDestinationId(), depositDTO);
+        depositIntoAccount(transferDTO.getDestinationId(), depositDTO);
+
+        WithdrawalDTO withdrawalDTO = new WithdrawalDTO(transferDTO.getAmount());
+        return withdrawFromAccount(id, withdrawalDTO);
     }
 
     private AccountDTO mapAccountToDTO(Account account) {
