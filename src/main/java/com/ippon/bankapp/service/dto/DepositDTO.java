@@ -1,13 +1,13 @@
-package com.ippon.bankapp.domain;
+package com.ippon.bankapp.service.dto;
 
 import java.math.BigDecimal;
 
-public class Deposit {
+public class DepositDTO {
     private BigDecimal amount;
 
-    public Deposit() {}
+    public DepositDTO() {}
 
-    public Deposit(BigDecimal amount) {
+    public DepositDTO(BigDecimal amount) {
         this.amount = amount;
     }
 

@@ -6,9 +6,9 @@ import com.ippon.bankapp.rest.AccountController;
 import com.ippon.bankapp.service.dto.AccountDTO;
 import io.cucumber.java.Before;
 import io.cucumber.java.After;
-import com.ippon.bankapp.domain.Deposit;
-import com.ippon.bankapp.domain.Transfer;
-import com.ippon.bankapp.domain.Withdrawal;
+import com.ippon.bankapp.service.dto.DepositDTO;
+import com.ippon.bankapp.service.dto.TransferDTO;
+import com.ippon.bankapp.service.dto.WithdrawalDTO;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -71,12 +71,12 @@ public class AccountStepDefinitions {
 
     @And("{string} {string} with id {int} deposits {double} into their account")
     public void aDepositIsMade(String first, String last, int id, double depositAmount) throws Exception {
-        Deposit deposit = new Deposit(new BigDecimal(depositAmount));
+        DepositDTO depositDTO = new DepositDTO(new BigDecimal(depositAmount));
 
         mockMvc
                 .perform(post("/api/accounts/" + id + "/deposit")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(deposit)))
+                        .content(new ObjectMapper().writeValueAsString(depositDTO)))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -85,12 +85,12 @@ public class AccountStepDefinitions {
 
     @And("{string} {string} with id {int} withdraws {double} from their account")
     public void aWithdrawalIsMade(String first, String last, int id, double withdrawalAmount) throws Exception {
-        Withdrawal withdrawal = new Withdrawal(new BigDecimal(withdrawalAmount));
+        WithdrawalDTO withdrawalDTO = new WithdrawalDTO(new BigDecimal(withdrawalAmount));
 
         mockMvc
                 .perform(post("/api/accounts/" + id + "/withdraw")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(withdrawal)))
+                        .content(new ObjectMapper().writeValueAsString(withdrawalDTO)))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -99,12 +99,12 @@ public class AccountStepDefinitions {
 
     @And("{string} {string} with id {int} transfers {double} into the account of id {int}")
     public void aTransferIsMade(String first, String last, int id, double transferAmount, int destId) throws Exception {
-        Transfer transfer = new Transfer(new BigDecimal(transferAmount), destId);
+        TransferDTO transferDTO = new TransferDTO(new BigDecimal(transferAmount), destId);
 
         mockMvc
                 .perform(post("/api/accounts/" + id + "/transfer")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(transfer)))
+                        .content(new ObjectMapper().writeValueAsString(transferDTO)))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()

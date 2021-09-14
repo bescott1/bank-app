@@ -1,15 +1,15 @@
-package com.ippon.bankapp.domain;
+package com.ippon.bankapp.service.dto;
 
 import java.math.BigDecimal;
 
-public class Transfer {
+public class TransferDTO {
 
     private BigDecimal amount;
     private Integer destinationId;
 
-    public Transfer() {}
+    public TransferDTO() {}
 
-    public Transfer(BigDecimal bigDecimal, int destinationId) {
+    public TransferDTO(BigDecimal bigDecimal, int destinationId) {
         this.amount = bigDecimal;
         this.destinationId = destinationId;
     }

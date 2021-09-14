@@ -1,9 +1,9 @@
 package com.ippon.bankapp.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ippon.bankapp.domain.Deposit;
-import com.ippon.bankapp.domain.Transfer;
-import com.ippon.bankapp.domain.Withdrawal;
+import com.ippon.bankapp.service.dto.DepositDTO;
+import com.ippon.bankapp.service.dto.TransferDTO;
+import com.ippon.bankapp.service.dto.WithdrawalDTO;
 import com.ippon.bankapp.rest.errors.RestErrorHandler;
 import com.ippon.bankapp.service.AccountService;
 import com.ippon.bankapp.service.dto.AccountDTO;
@@ -160,31 +160,31 @@ class AccountControllerTest {
 
     @Test
     public void testDeposit_requestValid() throws Exception {
-        Deposit deposit = new Deposit(new BigDecimal("12.55"));
+        DepositDTO depositDTO = new DepositDTO(new BigDecimal("12.55"));
 
-        given(accountService.depositIntoAccount(anyInt(), any(Deposit.class)))
+        given(accountService.depositIntoAccount(anyInt(), any(DepositDTO.class)))
                 .willReturn(new AccountDTO()
                         .id(1)
                         .lastName("Scott")
                         .firstName("Ben")
-                        .balance(deposit.getAmount()));
+                        .balance(depositDTO.getAmount()));
 
         mockMvc
                 .perform(post("/api/accounts/1/deposit")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(deposit)))
+                        .content(objectMapper.writeValueAsString(depositDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("Ben"))
                 .andExpect(jsonPath("$.lastName").value("Scott"))
-                .andExpect(jsonPath("$.balance").value(deposit.getAmount()));
+                .andExpect(jsonPath("$.balance").value(depositDTO.getAmount()));
     }
 
     @Test
     public void testWithdraw_requestValid() throws Exception {
-        Withdrawal withdrawal = new Withdrawal(new BigDecimal("9.99"));
+        WithdrawalDTO withdrawalDTO = new WithdrawalDTO(new BigDecimal("9.99"));
 
-        given(accountService.withdrawFromAccount(anyInt(), any(Withdrawal.class)))
+        given(accountService.withdrawFromAccount(anyInt(), any(WithdrawalDTO.class)))
                 .willReturn(new AccountDTO()
                         .id(1)
                         .lastName("Scott")
@@ -194,7 +194,7 @@ class AccountControllerTest {
         mockMvc
                 .perform(post("/api/accounts/1/withdraw")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(withdrawal)))
+                        .content(objectMapper.writeValueAsString(withdrawalDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("Ben"))
@@ -204,9 +204,9 @@ class AccountControllerTest {
 
     @Test
     public void testTransfer_requestValid() throws Exception {
-        Transfer withdrawal = new Transfer(new BigDecimal("10.99"), 1);
+        TransferDTO withdrawal = new TransferDTO(new BigDecimal("10.99"), 1);
 
-        given(accountService.transfer(anyInt(), any(Transfer.class)))
+        given(accountService.transfer(anyInt(), any(TransferDTO.class)))
                 .willReturn(new AccountDTO()
                         .id(1)
                         .lastName("Scott")
