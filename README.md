@@ -24,7 +24,7 @@ For each feature implemented there should be unit, integration and acceptance te
 * Withdraw from an account
 * Transfer from one account to another
 * Get last 10 transaction from an account
-* An account may not depositDTO more than $5000 per day
+* An account may not deposit more than $5000 per day
 
 
 ##
