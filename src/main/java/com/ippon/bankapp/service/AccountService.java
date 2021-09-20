@@ -7,6 +7,7 @@ import com.ippon.bankapp.service.dto.WithdrawalDTO;
 import com.ippon.bankapp.repository.AccountRepository;
 import com.ippon.bankapp.service.dto.AccountDTO;
 import com.ippon.bankapp.service.exception.AccountNotFoundException;
+import com.ippon.bankapp.service.exception.InsufficientFundsException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class AccountService {
         return mapAccountToDTO(accountRepository.save(account));
     }
 
-    public AccountDTO getAccount(Integer id) {
+    public AccountDTO getAccount(int id) {
         Account account = accountRepository
                 .findById(id)
                 .orElseThrow(AccountNotFoundException::new);
@@ -41,7 +42,7 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
-    public AccountDTO depositIntoAccount(Integer id, DepositDTO depositDTO) {
+    public AccountDTO depositIntoAccount(int id, DepositDTO depositDTO) {
         Account account = accountRepository
                 .findById(id)
                 .orElseThrow(AccountNotFoundException::new);
@@ -51,17 +52,20 @@ public class AccountService {
         return mapAccountToDTO(accountRepository.save(account));
     }
 
-    public AccountDTO withdrawFromAccount(Integer id, WithdrawalDTO withdrawalDTO) {
+    public AccountDTO withdrawFromAccount(int id, WithdrawalDTO withdrawalDTO) {
         Account account = accountRepository
                 .findById(id)
                 .orElseThrow(AccountNotFoundException::new);
 
+        if (account.getBalance().compareTo(withdrawalDTO.getAmount()) < 0) {
+            throw new InsufficientFundsException();
+        }
         account.setBalance(account.getBalance().subtract(withdrawalDTO.getAmount()));
 
         return mapAccountToDTO(accountRepository.save(account));
     }
 
-    public AccountDTO transfer(Integer id, TransferDTO transferDTO) {
+    public AccountDTO transfer(int id, TransferDTO transferDTO) {
         DepositDTO depositDTO = new DepositDTO(transferDTO.getAmount());
         depositIntoAccount(transferDTO.getDestinationId(), depositDTO);
 

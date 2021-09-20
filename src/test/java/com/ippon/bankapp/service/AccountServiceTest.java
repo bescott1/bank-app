@@ -6,6 +6,9 @@ import com.ippon.bankapp.service.dto.TransferDTO;
 import com.ippon.bankapp.service.dto.WithdrawalDTO;
 import com.ippon.bankapp.repository.AccountRepository;
 import com.ippon.bankapp.service.dto.AccountDTO;
+import com.ippon.bankapp.service.exception.AccountNotFoundException;
+import com.ippon.bankapp.service.exception.InsufficientFundsException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +26,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
@@ -42,7 +46,7 @@ public class AccountServiceTest {
 
         Account account = new Account(accountDto.getFirstName(), accountDto.getLastName());
 
-        given(accountRepository.findById(Integer.valueOf(1)))
+        given(accountRepository.findById(1))
                 .willReturn(Optional.of(account));
 
         //act
@@ -52,6 +56,17 @@ public class AccountServiceTest {
         assertThat(accountResult.getFirstName(), is("Ben"));
         assertThat(accountResult.getLastName(), is("Scott"));
     }
+
+    @Test
+    public void getsInvalidAccountThrowsError() {
+        given(accountRepository
+                .findById(1))
+                .willReturn(Optional.empty());
+
+        Assertions.assertThrows(AccountNotFoundException.class,
+                () -> subject.getAccount(1));
+    }
+
 
     @Test
     public void getsAllAccounts() {
@@ -110,7 +125,7 @@ public class AccountServiceTest {
         account.setBalance(new BigDecimal("0.33"));
         DepositDTO depositDTO = new DepositDTO(new BigDecimal("10.66"));
 
-        given(accountRepository.findById(Integer.valueOf(1)))
+        given(accountRepository.findById(1))
                 .willReturn(Optional.of(account));
         given(accountRepository.save(any(Account.class))).willReturn(account);
 
@@ -134,7 +149,7 @@ public class AccountServiceTest {
         account.setBalance(new BigDecimal("10.50"));
         WithdrawalDTO withdrawalDTO = new WithdrawalDTO(new BigDecimal("0.49"));
 
-        given(accountRepository.findById(Integer.valueOf(1)))
+        given(accountRepository.findById(1))
                 .willReturn(Optional.of(account));
         given(accountRepository.save(any(Account.class))).willReturn(account);
 
@@ -145,6 +160,25 @@ public class AccountServiceTest {
         assertThat(accountResult.getBalance(), is(new BigDecimal("10.01")));
         assertThat(accountResult.getFirstName(), is("Ben"));
         assertThat(accountResult.getLastName(), is("Scott"));
+    }
+
+    @Test
+    public void withdrawsWithInsufficientFundsThrowsException() {
+        //Given
+        AccountDTO accountDto = new AccountDTO()
+                .firstName("Ben")
+                .lastName("Scott");
+
+        Account account = new Account(accountDto.getFirstName(), accountDto.getLastName());
+        account.setBalance(new BigDecimal("10.50"));
+        WithdrawalDTO withdrawalDTO = new WithdrawalDTO(new BigDecimal("10.59"));
+
+        given(accountRepository.findById(1))
+                .willReturn(Optional.of(account));
+
+        //act
+        Assertions.assertThrows(InsufficientFundsException.class,
+                () -> subject.withdrawFromAccount(1, withdrawalDTO));
     }
 
     @Test
@@ -166,7 +200,7 @@ public class AccountServiceTest {
 
         TransferDTO transferDTO = new TransferDTO(new BigDecimal("3.05"), 1);
 
-        given(accountRepository.findById(Integer.valueOf(1)))
+        given(accountRepository.findById(1))
                 .willReturn(Optional.of(transferToAccount));
         given(accountRepository.findById(Integer.valueOf(2)))
                 .willReturn(Optional.of(transferFromAccount));
