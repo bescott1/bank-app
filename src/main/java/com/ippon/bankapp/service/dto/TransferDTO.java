@@ -7,7 +7,7 @@ public class TransferDTO {
 
     @DecimalMin(value = "0.0", inclusive = false)
     private BigDecimal amount;
-    private Integer destinationId;
+    private int destinationId;
 
     public TransferDTO() {}
 
@@ -20,7 +20,7 @@ public class TransferDTO {
         return amount;
     }
 
-    public Integer getDestinationId() {
+    public int getDestinationId() {
         return destinationId;
     }
 

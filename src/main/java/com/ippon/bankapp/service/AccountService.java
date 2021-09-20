@@ -10,6 +10,7 @@ import com.ippon.bankapp.service.exception.AccountNotFoundException;
 import com.ippon.bankapp.service.exception.InsufficientFundsException;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,11 +67,22 @@ public class AccountService {
     }
 
     public AccountDTO transfer(int id, TransferDTO transferDTO) {
-        DepositDTO depositDTO = new DepositDTO(transferDTO.getAmount());
-        depositIntoAccount(transferDTO.getDestinationId(), depositDTO);
+        Account origin = accountRepository
+                .findById(id)
+                .orElseThrow(AccountNotFoundException::new);
 
-        WithdrawalDTO withdrawalDTO = new WithdrawalDTO(transferDTO.getAmount());
-        return withdrawFromAccount(id, withdrawalDTO);
+        if (origin.getBalance().compareTo(transferDTO.getAmount()) < 0 ) {
+            throw new InsufficientFundsException();
+        }
+        Account destination = accountRepository
+                .findById(transferDTO.getDestinationId())
+                .orElseThrow(AccountNotFoundException::new);
+
+      origin.setBalance(origin.getBalance().subtract(transferDTO.getAmount()));
+      destination.setBalance(destination.getBalance().add(transferDTO.getAmount()));
+
+      accountRepository.saveAll(Arrays.asList(origin, destination));
+      return mapAccountToDTO(origin);
     }
 
     private AccountDTO mapAccountToDTO(Account account) {
