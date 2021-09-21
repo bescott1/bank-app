@@ -39,7 +39,8 @@ public class AccountController {
 
     @PostMapping("/accounts/{id}/deposit")
     public AccountDTO deposit(@PathVariable(name = "id") Integer id, @RequestBody DepositDTO depositDTO) {
-        return accountService.depositIntoAccount(id, depositDTO);
+        AccountDTO result = accountService.depositIntoAccount(id, depositDTO);
+        return result;
     }
 
     @PostMapping("/accounts/{id}/withdraw")

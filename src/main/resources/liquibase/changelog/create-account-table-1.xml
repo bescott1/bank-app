@@ -10,7 +10,7 @@
             <column autoIncrement="true" name="id" type="INT"/>
             <column name="first_name" type="VARCHAR(255)"/>
             <column name="last_name" type="VARCHAR(255)"/>
-            <column name="balance" type="BIGINT"/>
+            <column name="balance" type="NUMERIC(10,2)"/>
         </createTable>
     </changeSet>
 

@@ -49,8 +49,8 @@ public class AccountService {
                 .orElseThrow(AccountNotFoundException::new);
 
         account.setBalance(account.getBalance().add(depositDTO.getAmount()));
-
-        return mapAccountToDTO(accountRepository.save(account));
+        Account result = accountRepository.save(account);
+        return mapAccountToDTO(result);
     }
 
     public AccountDTO withdrawFromAccount(int id, WithdrawalDTO withdrawalDTO) {
